@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  web: #name of the image instead of frank/frontend
+    build: # the build was expanded here because the file necessary of a docker-compose is a simple (Dockerfile) but here we have a Dockerfile.dev
+      context: . #the context where the specific Dockerfile.dev reside (in this case the pwd)
+      dockerfile: Dockerfile.dev
+
+    ports: 
+      - "3001:3000" #mapping between local host port and container port
+
+    volumes:
+      - /app/node_modules #do not reference this folder inside the container
+      - .:/app #reference all necessary file for the /app outside to the local host (context i.e pwd)
+
+
+  #container for running our test
+  tests:
+    build: # the build was expanded here because the file necessary of a docker-compose is a simple (Dockerfile) but here we have a Dockerfile.dev
+      context: . #the context where the specific Dockerfile.dev reside (in this case the pwd)
+      dockerfile: Dockerfile.dev
+
+    volumes:
+      - /app/node_modules #do not reference this folder inside the container
+      - .:/app #reference all necessary file for the /app outside to the local host (context i.e pwd)
+
+    command: ["yarn", "test"]
